@@ -12,10 +12,12 @@
     - Tenant ID
     - Application ID
     - Application Secret
-    This information should be stored in a secrets.json file in the same directory as the script.
+    This information should be stored in a config.json file in the same directory as the script.
 
     Greatly inspired from : 
+    - https://mikemdm.de/2023/01/29/can-you-create-a-autopilot-hash-from-winpe-yes/
     - https://mikemdm.de/2023/09/10/modern-os-provisioning-for-windows-autopilot-using-osdcloud/
+    - https://github.com/mmeierm/Scripts/blob/main/OSDCloud_helpers/OSDCloud_UploadAutopilot.ps1
     - https://www.powershellgallery.com/packages/WindowsAutoPilotIntune
 #>
 
@@ -35,12 +37,12 @@ if (-not $module) {
 }
 Import-Module WindowsAutopilotIntune -Scope Global
 
-if (-not (Test-Path "$ProjectRoot/secrets.json")) {
-    Write-Host "Please create a secrets.json file in the $ProjectRoot directory. See README.md for more information."
+if (-not (Test-Path "$ProjectRoot/config.json")) {
+    Write-Host "Please create a config.json file in the $ProjectRoot directory. See README.md for more information."
     Read-Host "Press any key to exit"
     Exit 1
 }
-$Credentials = Get-Content "$ProjectRoot/secrets.json" | ConvertFrom-Json
+$Credentials = Get-Content "$ProjectRoot/config.json" | ConvertFrom-Json
 
 $SecureString = ConvertTo-SecureString -String $Credentials.appSecret -AsPlainText -Force
 $ClientSecretCredential = New-Object -TypeName System.Management.Automation.PSCredential -ArgumentList $Credentials.appID, $SecureString
