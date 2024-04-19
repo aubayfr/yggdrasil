@@ -108,7 +108,7 @@ if (-not (Get-Command "gum" -errorAction SilentlyContinue))
             {
                 Write-Host -ForegroundColor Yellow "Installing Scoop..."
                 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-                Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
+                Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
                 Write-Host -ForegroundColor Yellow "Scoop installed."
             }
             else
@@ -207,6 +207,7 @@ if (-not $CurrentWorkspace)
 {
     Write-Host -ForegroundColor Yellow "OSDCloud workspace is not set. Setting up OSDCloud workspace..."
     New-CustomOSDCloudWorkspace
+    $CurrentWorkspace = Get-OSDCloudWorkspace
 }
 else
 {
@@ -220,6 +221,7 @@ else
         if ($SelectedWorkspace -eq "Create new workspace")
         {
             New-CustomOSDCloudWorkspace
+            $CurrentWorkspace = Get-OSDCloudWorkspace
         }
         else
         {
