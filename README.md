@@ -1,6 +1,8 @@
-# Yggdrasil
+# Yggdrasil - TUI wrapper for OSDCloud
 
-**Yggdrasil is an opinionated collection of scripts to deploy Windows using OSDCloud.**
+**Yggdrasil serves as a TUI wrapper for OSDCloud.**
+
+**It also provides an opinionated startup script for WinPE.** 
 
 > The opinionated part resides in the fact that it is designed for Autopilot registration of devices.
 > 
