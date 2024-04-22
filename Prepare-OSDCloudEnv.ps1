@@ -23,8 +23,7 @@ function New-CustomOSDCloudTemplate {
 
     Write-Host -ForegroundColor Yellow "Choose a template name :"
     $TemplateName = gum input --placeholder "WinPE_EN"
-    if (-not $TemplateName)
-    {
+    if (-not $TemplateName) {
         Write-Host -ForegroundColor Red "Template name is required."
         Exit 1
     }
@@ -32,12 +31,11 @@ function New-CustomOSDCloudTemplate {
         Write-Host -ForegroundColor Green "Template name: $TemplateName"
     }
 
-    if (-not $UseWinRE)
-    {
-        New-OSDCloudTemplate -Name $TemplateName -Language en-gb,fr-fr -SetAllIntl $ChosenLanguage
+    if (-not $UseWinRE) {
+        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr -SetAllIntl $ChosenLanguage
     }
     else {
-        New-OSDCloudTemplate -Name $TemplateName -Language en-gb,fr-fr -SetAllIntl $ChosenLanguage -WinRE
+        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr -SetAllIntl $ChosenLanguage -WinRE
     }
 }
 
@@ -52,8 +50,7 @@ function New-CustomOSDCloudWorkspace {
 
     Write-Host -ForegroundColor Yellow "Choose a workspace name :"
     $WorkspaceName = gum input --placeholder "WinPE_FR_PROD"
-    if (-not $WorkspaceName)
-    {
+    if (-not $WorkspaceName) {
         Write-Host -ForegroundColor Red "Workspace name is required."
         Exit 1
     }
@@ -74,7 +71,7 @@ function Set-StartURL {
     #>
 
     Write-Host -ForegroundColor Yellow "Choose a start URL :"
-    $Config.startURL = gum input --width=0 --placeholder "https://raw.githubusercontent.com/username/project/master/script.ps1"
+    $Config.startURL = gum input --width=0 --placeholder "https://raw.githubusercontent.com/username/project/master/script.ps1" --value="https://raw.githubusercontent.com/n4kama/yggdrasil/master/Install-Windows.ps1"
     write-host -ForegroundColor Green "Start URL: $($Config.startURL)"
 }
 
@@ -93,34 +90,28 @@ function Set-Wallpaper {
 }
 
 #region Ensure that gum is installed
-if (-not (Get-Command "gum" -errorAction SilentlyContinue))
-{
+if (-not (Get-Command "gum" -errorAction SilentlyContinue)) {
     Write-Host -ForegroundColor Yellow "Gum is not installed."
     $InstallGum = Read-Host -Prompt "Do you want to install Gum automatically using Scoop? (y/n, default: n)"
-    if ($InstallGum -eq "y") # eq is case insensitive
-    {
+    if ($InstallGum -eq "y") { # eq is case insensitive
         Write-Host -ForegroundColor Yellow "Installing Gum..."
-        if (-not (Get-Command "scoop" -errorAction SilentlyContinue))
-        {
+        if (-not (Get-Command "scoop" -errorAction SilentlyContinue)) {
             Write-Host -ForegroundColor Yellow "Scoop is not installed."
             $InstallScoop = Read-Host -Prompt "Do you want to install Scoop automatically? (y/n, default: n)"
-            if ($InstallScoop -eq "y")
-            {
+            if ($InstallScoop -eq "y") {
                 Write-Host -ForegroundColor Yellow "Installing Scoop..."
                 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
                 Invoke-Expression "& {$(Invoke-RestMethod get.scoop.sh)} -RunAsAdmin"
                 Write-Host -ForegroundColor Yellow "Scoop installed."
             }
-            else
-            {
+            else {
                 Write-Host -ForegroundColor Yellow "Please install Scoop manually."
             }
         }
         scoop install charm-gum
         Write-Host -ForegroundColor Yellow "Gum installed."
     }
-    else
-    {
+    else {
         Write-Host -ForegroundColor Yellow "Please install Gum manually."
     }
 }
@@ -128,16 +119,14 @@ if (-not (Get-Command "gum" -errorAction SilentlyContinue))
 
 #region Ensure that Prepare-OSDCloudEnv.ps1 is run in an elevated PowerShell session
 $IsAdmin = [bool](([System.Security.Principal.WindowsIdentity]::GetCurrent()).groups -match "S-1-5-32-544")
-if (-not $IsAdmin)
-{
+if (-not $IsAdmin) {
     Write-Host -ForegroundColor Yellow "Please run this script in an elevated PowerShell session."
     Exit 1
 }
 # endregion
 
 #region Ensure that OSD module is installed
-if (-not (Get-InstalledModule -Name 'OSD' -ErrorAction SilentlyContinue))
-{
+if (-not (Get-InstalledModule -Name 'OSD' -ErrorAction SilentlyContinue)) {
     Write-Host -ForegroundColor Yellow "OSD module is not installed. Installing..." -NoNewline
     Install-Module -Name 'OSD' -Force | Out-Null
     Write-Host -ForegroundColor Green " Done."
@@ -145,16 +134,14 @@ if (-not (Get-InstalledModule -Name 'OSD' -ErrorAction SilentlyContinue))
 #endregion
 
 #region Ensure that Windows ADK is installed
-if (-not (Test-Path -Path "${env:ProgramFiles(x86)}\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools"))
-{
+if (-not (Test-Path -Path "${env:ProgramFiles(x86)}\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools")) {
     Write-Host -ForegroundColor Yellow "Windows ADK is not installed. Please install Windows ADK."
     Exit 1
 }
 #endregion
 
 #region Ensure that Windows PE is installed
-if (-not (Test-Path -Path "${env:ProgramFiles(x86)}\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment"))
-{
+if (-not (Test-Path -Path "${env:ProgramFiles(x86)}\Windows Kits\10\Assessment and Deployment Kit\Windows Preinstallation Environment")) {
     Write-Host -ForegroundColor Yellow "Windows PE is not installed. Please install Windows PE add-on for the ADK."
     Exit 1
 }
@@ -164,26 +151,21 @@ Write-Host "=== Configure OSDCloud Template and Workspace ==="
 
 #region Setup OSDCloud Template
 $CurrentTemplate = Get-OSDCloudTemplate
-if (-not $CurrentTemplate)
-{
+if (-not $CurrentTemplate) {
     Write-Host -ForegroundColor Yellow "OSDCloud template is not set. Setting up OSDCloud template..."
     New-CustomOSDCloudTemplate
 }
-else
-{
+else {
     Write-Host -ForegroundColor Yellow "OSDCloud template is set to $CurrentTemplate."
     gum confirm "Do you want to keep it?"
-    if (-not $?)
-    {
+    if (-not $?) {
         $TemplatesList = @("Create new template")
         $TemplatesList += Get-OSDCloudTemplateNames
         $SelectedTemplate = gum choose --header "Choose an existing template or create a new one" $TemplatesList
-        if ($SelectedTemplate -eq "Create new template")
-        {
+        if ($SelectedTemplate -eq "Create new template") {
             New-CustomOSDCloudTemplate
         }
-        else
-        {
+        else {
             Set-OSDCloudTemplate -Name $SelectedTemplate | Out-Null
             Write-Host -ForegroundColor Green "OSDCloud template is set to $SelectedTemplate."
         }
@@ -193,8 +175,7 @@ else
 
 #region Ensure that Workspaces folder exists
 $WorkspacesPath = "$env:ProgramData\OSDCloud\Workspaces"
-if (-not (Test-Path -Path $WorkspacesPath))
-{
+if (-not (Test-Path -Path $WorkspacesPath)) {
     Write-Host -ForegroundColor DarkMagenta "Creating $WorkspacesPath..." -NoNewline
     New-Item -Path $WorkspacesPath -ItemType Directory | Out-Null
     Write-Host -ForegroundColor Green " Done."
@@ -203,28 +184,23 @@ if (-not (Test-Path -Path $WorkspacesPath))
 
 #region Setup OSDCloud Workspace
 $CurrentWorkspace = Get-OSDCloudWorkspace
-if (-not $CurrentWorkspace)
-{
+if (-not $CurrentWorkspace) {
     Write-Host -ForegroundColor Yellow "OSDCloud workspace is not set. Setting up OSDCloud workspace..."
     New-CustomOSDCloudWorkspace
     $CurrentWorkspace = Get-OSDCloudWorkspace
 }
-else
-{
+else {
     Write-Host -ForegroundColor Yellow "OSDCloud workspace is set to $CurrentWorkspace."
     gum confirm "Do you want to keep it?"
-    if (-not $?)
-    {
+    if (-not $?) {
         $WorkspacesList = @("Create new workspace")
         $WorkspacesList += Get-ChildItem $WorkspacesPath | Select-Object -ExpandProperty BaseName
         $SelectedWorkspace = gum choose --header "Choose an existing workspace or create a new one" $WorkspacesList
-        if ($SelectedWorkspace -eq "Create new workspace")
-        {
+        if ($SelectedWorkspace -eq "Create new workspace") {
             New-CustomOSDCloudWorkspace
             $CurrentWorkspace = Get-OSDCloudWorkspace
         }
-        else
-        {
+        else {
             Set-OSDCloudWorkspace -WorkspacePath "$WorkspacesPath\$SelectedWorkspace" | Out-Null
             Write-Host -ForegroundColor Green "OSDCloud workspace is set to $SelectedWorkspace."
         }
@@ -238,22 +214,19 @@ Write-Host "=== Editing WinPE in the OSDCloud workspace ==="
 #region Read configuration file ($CurrentWorkspace\Config\config.json)
 $Config = @{}
 $ConfigFile = "$CurrentWorkspace\Config\config.json"
-if (Test-Path -Path $ConfigFile)
-{
+if (Test-Path -Path $ConfigFile) {
     $Config = Get-Content -Path $ConfigFile | ConvertFrom-Json
 }
 #endregion
 
 #region Configure StartURL
-if (-not $Config.startURL)
-{
+if (-not $Config.startURL) {
     Set-StartURL
 }
 else {
     Write-Host -ForegroundColor Yellow "Current start URL: $($Config.startURL)"
     gum confirm "Do you want to keep it?"
-    if (-not $?)
-    {
+    if (-not $?) {
         Set-StartURL
     }
 }
@@ -261,28 +234,22 @@ else {
 
 #region Configure wallpaper
 $DefaultWallpaper = "$env:windir\Web\Wallpaper\ThemeA\img20.jpg"
-if ($Config.wallpaper -and $config.wallpaper -ne $DefaultWallpaper)
-{
+if ($Config.wallpaper -and $config.wallpaper -ne $DefaultWallpaper) {
     Write-Host -ForegroundColor Yellow "Current wallpaper: $($Config.wallpaper)"
     gum confirm "Do you want to keep it?"
-    if (-not $?)
-    {
+    if (-not $?) {
         gum confirm --default=false "Do you want to skip setting a wallpaper?"
-        if ($?)
-        {
+        if ($?) {
             $Config.wallpaper = $DefaultWallpaper
         }
-        else
-        {
+        else {
             Set-Wallpaper
         }
     }
 }
-else
-{
+else {
     gum confirm --default=false "Do you want to set a wallpaper?"
-    if ($?)
-    {
+    if ($?) {
         Set-Wallpaper
     }
     else {
@@ -292,20 +259,17 @@ else
 #endregion
 
 #region Configure the Azure application credentials
-if (-not $Config.tenantID)
-{
+if (-not $Config.tenantID) {
     Write-Host -ForegroundColor Yellow "Enter the Azure AD tenant ID :"
     $Config.tenantID = gum input --width=0 --placeholder "00000000-0000-0000-0000-000000000000"
     write-host -ForegroundColor Green "Azure AD tenant ID: $($Config.tenantID)"
 }
-if (-not $Config.appID)
-{
+if (-not $Config.appID) {
     Write-Host -ForegroundColor Yellow "Enter the Azure AD application ID :"
     $Config.appID = gum input --width=0 --placeholder "00000000-0000-0000-0000-000000000000"
     write-host -ForegroundColor Green "Azure AD application ID: $($Config.appID)"
 }
-if (-not $Config.appSecret)
-{
+if (-not $Config.appSecret) {
     Write-Host -ForegroundColor Yellow "Enter the Azure AD application secret"
     $Config.appSecret = gum input --width=0 --password
     write-host -ForegroundColor Green "Azure AD application secret config"
@@ -317,14 +281,12 @@ $Config | ConvertTo-Json | Set-Content -Path $ConfigFile
 #endregion
 
 #region Copy WinPE Autopilot prerequisite files
-if (-not (Test-Path -Path "$CurrentWorkspace\Config\oa3tool.exe"))
-{
+if (-not (Test-Path -Path "$CurrentWorkspace\Config\oa3tool.exe")) {
     Write-Host "Copying OA3 Tool from Windows ADK..." -NoNewline
     Copy-Item -Path "${env:ProgramFiles(x86)}\Windows Kits\10\Assessment and Deployment Kit\Deployment Tools\amd64\Licensing\OA30\oa3tool.exe" -Destination "$CurrentWorkspace\Config" -Force
     Write-Host -ForegroundColor Green " Done."
 }
-if (-not (Test-Path -Path "$CurrentWorkspace\Config\PCPKsp.dll"))
-{
+if (-not (Test-Path -Path "$CurrentWorkspace\Config\PCPKsp.dll")) {
     Write-Host "Copying PCPKsp.dll from System32..." -NoNewline
     Copy-Item -Path "$env:windir\System32\PCPKsp.dll" -Destination "$CurrentWorkspace\Config\" -Force
     Write-Host -ForegroundColor Green " Done."
@@ -338,8 +300,7 @@ Edit-OSDCloudWinPE -CloudDriver * -StartURL $Config.startURL -Wallpaper $Config.
 
 #region Configure access rights to the OSDCloud ISO
 gum confirm "Allow all users to access the OSDCloud (No prompt) ISO?"
-if ($?)
-{
+if ($?) {
     $IsoPath = "$CurrentWorkspace\OSDCloud_NoPrompt.iso"
     icacls $IsoPath /grant Everyone:F
     Write-Host -ForegroundColor Green "All users can access the OSDCloud ISO."
