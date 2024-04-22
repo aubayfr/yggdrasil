@@ -17,13 +17,13 @@ Following [OSDCloud's documentation](https://www.osdcloud.com/osdcloud/setup) :
 
 ## Usage
 
-### Quick Install (Recommended)
+### TUI Wrapper only (recommended)
 
 ```powershell
 irm osd.baguet.org | iex
 ```
 
-### Manual Install (For personalization)
+### Customized installation
 
 - Clone/Fork the repository.
 - Edit `$OSDCloudParameters` from `Install-Windows.ps1` to match your environment.
