@@ -126,7 +126,7 @@ if (-not $IsAdmin) {
 # endregion
 
 #region Ensure that OSD module is installed
-if (-not (Get-InstalledModule -Name 'OSD' -ErrorAction SilentlyContinue)) {
+if (-not (Get-Module -Name OSD -ListAvailable)) {
     Write-Host -ForegroundColor Yellow "OSD module is not installed. Installing..." -NoNewline
     Install-Module -Name 'OSD' -Force | Out-Null
     Write-Host -ForegroundColor Green " Done."
@@ -295,7 +295,10 @@ if (-not (Test-Path -Path "$CurrentWorkspace\Config\PCPKsp.dll")) {
 #endregion
 
 #region Configure WinPE ISO
-Edit-OSDCloudWinPE -CloudDriver * -StartURL $Config.startURL -Wallpaper $Config.wallpaper
+Edit-OSDCloudWinPE `
+-CloudDriver * `
+-StartURL $Config.startURL `
+-Wallpaper $Config.wallpaper
 #endregion
 
 #region Configure access rights to the OSDCloud ISO
