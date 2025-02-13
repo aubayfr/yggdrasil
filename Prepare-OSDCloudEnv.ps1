@@ -71,7 +71,7 @@ function Set-StartURL {
     #>
 
     Write-Host -ForegroundColor Yellow "Choose a start URL :"
-    $Config.startURL = gum input --width=0 --placeholder "https://raw.githubusercontent.com/username/project/master/script.ps1" --value="https://raw.githubusercontent.com/n4kama/yggdrasil/master/Install-Windows.ps1"
+    $Config.startURL = gum input --width=0 --placeholder "https://raw.githubusercontent.com/username/project/master/script.ps1" --value="https://github.com/aubayfr/yggdrasil/blob/master/Install-Windows.ps1tall-Windows.ps1"
     write-host -ForegroundColor Green "Start URL: $($Config.startURL)"
 }
 

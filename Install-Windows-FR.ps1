@@ -20,7 +20,7 @@ if (-not (Get-InstalledModule -Name 'OSD' -ErrorAction SilentlyContinue)) {
 #endregion
 
 #region Autopilot registration
-Invoke-RestMethod https://raw.githubusercontent.com/n4kama/yggdrasil/master/Upload-AutopilotHash.ps1 | Invoke-Expression
+Invoke-RestMethod https://raw.githubusercontent.com/aubayfr/yggdrasil/refs/heads/master/Upload-AutopilotHash.ps1 | Invoke-Expression
 #endregion
 
 #region Start-OSDCloud configuration
