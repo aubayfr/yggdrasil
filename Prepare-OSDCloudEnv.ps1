@@ -15,7 +15,7 @@ function New-CustomOSDCloudTemplate {
     Uses Gum and New-OSDCloudTemplate function from the OSD module, creates a new OSDCloud Template.
     #>
 
-    $ChosenLanguage = gum choose --header "Choose a language" "en-gb", "fr-fr"
+    $ChosenLanguage = gum choose --header "Choose a language" "en-gb", "fr-fr", "es-es"
     Write-Host -ForegroundColor Green "Language: $ChosenLanguage"
 
     gum confirm --default=false "Do you want to use WinRE ? (Enables wireless support. NOT compatible with virtual machines and older systems.)"    
@@ -32,10 +32,10 @@ function New-CustomOSDCloudTemplate {
     }
 
     if (-not $UseWinRE) {
-        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr -SetAllIntl $ChosenLanguage
+        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr, es-es -SetAllIntl $ChosenLanguage
     }
     else {
-        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr -SetAllIntl $ChosenLanguage -WinRE
+        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr, es-es -SetAllIntl $ChosenLanguage -WinRE
     }
 }
 
