@@ -26,7 +26,7 @@ Invoke-RestMethod https://raw.githubusercontent.com/aubayfr/yggdrasil/refs/heads
 #region Start-OSDCloud configuration
 $OSDCloudParameters = @{
     OSVersion = "Windows 11"
-    OSBuild = "24H2"
+    OSBuild = "25H2"
     OSEdition = "Enterprise"
     OSLanguage = "es-es"
     OSLicense = "Volume"
