@@ -75,19 +75,19 @@ function Set-StartURL {
     write-host -ForegroundColor Green "Start URL: $($Config.startURL)"
 }
 
-function Set-Wallpaper {
-    <#
-    .SYNOPSIS
-    Set the wallpaper in the OSDCloud configuration file.
+# function Set-Wallpaper {
+#     <#
+#     .SYNOPSIS
+#     Set the wallpaper in the OSDCloud configuration file.
 
-    .DESCRIPTION
-    Set the wallpaper in the OSDCloud configuration file.
-    #>
+#     .DESCRIPTION
+#     Set the wallpaper in the OSDCloud configuration file.
+#     #>
 
-    Write-Host -ForegroundColor Yellow "Choose a wallpaper (Must be in JPEG format) :"
-    $Config.wallpaper = gum file $HOME
-    write-host -ForegroundColor Green "Wallpaper: $($Config.wallpaper)"
-}
+#     Write-Host -ForegroundColor Yellow "Choose a wallpaper (Must be in JPEG format) :"
+#     $Config.wallpaper = gum file $HOME
+#     write-host -ForegroundColor Green "Wallpaper: $($Config.wallpaper)"
+# }
 
 #region Ensure that gum is installed
 if (-not (Get-Command "gum" -errorAction SilentlyContinue)) {
@@ -233,29 +233,29 @@ else {
 #endregion
 
 #region Configure wallpaper
-$DefaultWallpaper = "$env:windir\Web\Wallpaper\ThemeA\img20.jpg"
-if ($Config.wallpaper -and $config.wallpaper -ne $DefaultWallpaper) {
-    Write-Host -ForegroundColor Yellow "Current wallpaper: $($Config.wallpaper)"
-    gum confirm "Do you want to keep it?"
-    if (-not $?) {
-        gum confirm --default=false "Do you want to skip setting a wallpaper?"
-        if ($?) {
-            $Config.wallpaper = $DefaultWallpaper
-        }
-        else {
-            Set-Wallpaper
-        }
-    }
-}
-else {
-    gum confirm --default=false "Do you want to set a wallpaper?"
-    if ($?) {
-        Set-Wallpaper
-    }
-    else {
-        $Config.wallpaper = $DefaultWallpaper
-    }
-}
+# $DefaultWallpaper = "$env:windir\Web\Wallpaper\ThemeA\img20.jpg"
+# if ($Config.wallpaper -and $config.wallpaper -ne $DefaultWallpaper) {
+#     Write-Host -ForegroundColor Yellow "Current wallpaper: $($Config.wallpaper)"
+#     gum confirm "Do you want to keep it?"
+#     if (-not $?) {
+#         gum confirm --default=false "Do you want to skip setting a wallpaper?"
+#         if ($?) {
+#             $Config.wallpaper = $DefaultWallpaper
+#         }
+#         else {
+#             Set-Wallpaper
+#         }
+#     }
+# }
+# else {
+#     gum confirm --default=false "Do you want to set a wallpaper?"
+#     if ($?) {
+#         Set-Wallpaper
+#     }
+#     else {
+#         $Config.wallpaper = $DefaultWallpaper
+#     }
+# }
 #endregion
 
 #region Configure the Azure application credentials
@@ -297,8 +297,8 @@ if (-not (Test-Path -Path "$CurrentWorkspace\Config\PCPKsp.dll")) {
 #region Configure WinPE ISO
 Edit-OSDCloudWinPE `
 -CloudDriver * `
--StartURL $Config.startURL `
--Wallpaper $Config.wallpaper
+-StartURL $Config.startURL
+# -Wallpaper $Config.wallpaper
 #endregion
 
 #region Configure access rights to the OSDCloud ISO
