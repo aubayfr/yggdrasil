@@ -202,6 +202,7 @@ else {
         }
         else {
             Set-OSDCloudWorkspace -WorkspacePath "$WorkspacesPath\$SelectedWorkspace" | Out-Null
+            $CurrentWorkspace = Get-OSDCloudWorkspace
             Write-Host -ForegroundColor Green "OSDCloud workspace is set to $SelectedWorkspace."
         }
     }
