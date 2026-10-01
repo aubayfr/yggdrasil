@@ -213,7 +213,11 @@ Write-Host "=== Editing WinPE in the OSDCloud workspace ==="
 
 #region Read configuration file ($CurrentWorkspace\Config\config.json)
 $Config = @{}
-$ConfigFile = "$CurrentWorkspace\Config\config.json"
+$ConfigPath = "$CurrentWorkspace\Config"
+if (-not (Test-Path -Path $ConfigPath)) {
+    New-Item -Path $ConfigPath -ItemType Directory -Force | Out-Null
+}
+$ConfigFile = "$ConfigPath\config.json"
 if (Test-Path -Path $ConfigFile) {
     $Config = Get-Content -Path $ConfigFile | ConvertFrom-Json
 }
