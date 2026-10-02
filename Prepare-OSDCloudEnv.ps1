@@ -15,7 +15,7 @@ function New-CustomOSDCloudTemplate {
     Uses Gum and New-OSDCloudTemplate function from the OSD module, creates a new OSDCloud Template.
     #>
 
-    $ChosenLanguage = gum choose --header "Choose a language" "en-gb", "fr-fr", "es-es"
+    $ChosenLanguage = gum choose --header "Choose a language" "en-gb", "fr-fr", "es-es", "pt-pt"
     Write-Host -ForegroundColor Green "Language: $ChosenLanguage"
 
     gum confirm --default=false "Do you want to use WinRE ? (Enables wireless support. NOT compatible with virtual machines and older systems.)"    
@@ -32,10 +32,10 @@ function New-CustomOSDCloudTemplate {
     }
 
     if (-not $UseWinRE) {
-        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr, es-es -SetAllIntl $ChosenLanguage
+        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr, es-es, pt-pt -SetAllIntl $ChosenLanguage
     }
     else {
-        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr, es-es -SetAllIntl $ChosenLanguage -WinRE
+        New-OSDCloudTemplate -Name $TemplateName -Language en-gb, fr-fr, es-es, pt-pt -SetAllIntl $ChosenLanguage -WinRE
     }
 }
 
@@ -202,6 +202,7 @@ else {
         }
         else {
             Set-OSDCloudWorkspace -WorkspacePath "$WorkspacesPath\$SelectedWorkspace" | Out-Null
+            $CurrentWorkspace = Get-OSDCloudWorkspace
             Write-Host -ForegroundColor Green "OSDCloud workspace is set to $SelectedWorkspace."
         }
     }
@@ -213,7 +214,11 @@ Write-Host "=== Editing WinPE in the OSDCloud workspace ==="
 
 #region Read configuration file ($CurrentWorkspace\Config\config.json)
 $Config = @{}
-$ConfigFile = "$CurrentWorkspace\Config\config.json"
+$ConfigPath = "$CurrentWorkspace\Config"
+if (-not (Test-Path -Path $ConfigPath)) {
+    New-Item -Path $ConfigPath -ItemType Directory -Force | Out-Null
+}
+$ConfigFile = "$ConfigPath\config.json"
 if (Test-Path -Path $ConfigFile) {
     $Config = Get-Content -Path $ConfigFile | ConvertFrom-Json
 }
