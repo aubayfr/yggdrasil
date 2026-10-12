@@ -73,7 +73,15 @@ try {
         ZTI = $true
     }
     Write-Log "Starting OSDCloud: $(($OSDCloudParameters.GetEnumerator() | ForEach-Object { "$($_.Key)=$($_.Value)" }) -join ', ')"
-    Start-OSDCloud @OSDCloudParameters
+
+    $OriginalCulture = [System.Threading.Thread]::CurrentThread.CurrentCulture
+    [System.Threading.Thread]::CurrentThread.CurrentCulture = [System.Globalization.CultureInfo]::GetCultureInfo('en-US')
+    try {
+        Start-OSDCloud @OSDCloudParameters
+    }
+    finally {
+        [System.Threading.Thread]::CurrentThread.CurrentCulture = $OriginalCulture
+    }
 
     if (-not (Test-Path 'C:\Windows\System32')) {
         throw "Windows was not applied to C:\ by OSDCloud. See OSDCloud logs in C:\OSDCloud\Logs (if present)."
